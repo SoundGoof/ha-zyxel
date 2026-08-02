@@ -503,8 +503,8 @@ class ConfiguredZyxelSensor(AbstractZyxelSensor):
         self._attr_state_class = config["state_class"]
 
     @property
-    def state(self):
-        """Return the state of the sensor."""
+    def native_value(self):
+        """Return the native value of the sensor."""
         try:
             return self._get_value_from_path()
         except (KeyError, AttributeError):
