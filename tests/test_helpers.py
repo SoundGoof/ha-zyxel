@@ -98,6 +98,25 @@ class PollingBackoffTrackerTest(unittest.TestCase):
         self.assertFalse(tracker.recover())
 
 
+class WanTrafficStatisticsTest(unittest.TestCase):
+    """Verify traffic counters come from the cellular WAN."""
+
+    def test_selects_wwan_instead_of_lan(self):
+        module = _load_helpers()
+        data = {
+            "br0": {"BytesSent": 408, "BytesReceived": 0},
+            "wwan0": {
+                "BytesSent": 3029611563,
+                "BytesReceived": 19434564,
+            },
+        }
+
+        self.assertEqual(
+            module.wan_traffic_statistics(data),
+            {"BytesSent": 3029611563, "BytesReceived": 19434564},
+        )
+
+
 class SelectUniqueFieldsTest(unittest.TestCase):
     """Verify canonical router field selection."""
 

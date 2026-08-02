@@ -109,6 +109,17 @@ def select_unique_fields(
     return selected
 
 
+def wan_traffic_statistics(data: dict) -> dict[str, object]:
+    """Return counters for the first cellular WAN interface."""
+    for interface_name, counters in data.items():
+        if (
+            interface_name.lower().startswith("wwan")
+            and isinstance(counters, dict)
+        ):
+            return counters
+    return {}
+
+
 def device_metadata(data: dict) -> dict[str, object]:
     """Return safe device metadata without subscriber or credential fields."""
     field_names = {
