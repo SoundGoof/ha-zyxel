@@ -23,7 +23,10 @@ from custom_components.ha_zyxel.const import (
     DOMAIN,
     ERROR_BACKOFF_INTERVAL,
 )
-from custom_components.ha_zyxel.helpers import PollingBackoffTracker
+from custom_components.ha_zyxel.helpers import (
+    PollingBackoffTracker,
+    wan_traffic_statistics,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -102,6 +105,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
                 if not data:
                     raise UpdateFailed("No data received from router")
+
+                wan_traffic = wan_traffic_statistics(
+                    data.get("traffic", {})
+                )
+                if wan_traffic:
+                    data["traffic"] = wan_traffic
 
                 # Get device info if not already in data
                 if "device" not in data or not data["device"]:
